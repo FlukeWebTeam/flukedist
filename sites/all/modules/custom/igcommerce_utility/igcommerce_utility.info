@@ -1,0 +1,7 @@
+name = IG Commerce Utility
+description = Utility module for IG commerce.
+core = "7.x"
+package = IG Commerce
+
+dependencies[] = pathauto
+dependencies[] = language_hierarchy

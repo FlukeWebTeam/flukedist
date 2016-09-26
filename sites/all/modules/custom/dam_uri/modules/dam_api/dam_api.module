@@ -1,0 +1,154 @@
+<?php
+function dam_api_get_supported_content_types(){
+  $url = "http://data.fluke.com/api/dam_service_resources/GetSupportedContentTypes.json";
+
+  $options = array(
+    CURLOPT_RETURNTRANSFER => TRUE,
+    CURLOPT_HEADER => FALSE,
+    CURLOPT_USERAGENT => 'dam',
+    CURLOPT_AUTOREFERER => TRUE,
+    CURLOPT_CONNECTTIMEOUT => 10,
+    CURLOPT_TIMEOUT => 300,
+    CURLOPT_POST => TRUE,
+    CURLOPT_SSL_VERIFYHOST => FALSE,
+    CURLOPT_SSL_VERIFYPEER => FALSE
+  );
+  
+  $ch = curl_init( $url );
+  @curl_setopt_array($ch, $options);
+  $content = curl_exec( $ch );
+  curl_close( $ch );
+
+  if (empty($content))  {
+    $result = FALSE;  // no data returned
+  }
+  else {
+    $result = $content;
+  }
+  return $result;
+}
+
+function dam_api_get_metadata($post_fields) {
+  $url = "http://data.fluke.com/api/dam_service_resources/GetMetaData.json";
+
+  $options = array(
+    CURLOPT_RETURNTRANSFER => TRUE,
+    CURLOPT_HEADER => FALSE,
+    CURLOPT_USERAGENT => 'dam',
+    CURLOPT_AUTOREFERER => TRUE,
+    CURLOPT_CONNECTTIMEOUT => 10,
+    CURLOPT_TIMEOUT => 300,
+    CURLOPT_POST => TRUE,
+    CURLOPT_POSTFIELDS => http_build_query($post_fields, '', '&'),
+    CURLOPT_SSL_VERIFYHOST => FALSE,
+    CURLOPT_SSL_VERIFYPEER => FALSE
+  );
+  
+  $ch = curl_init( $url );
+  @curl_setopt_array($ch, $options);
+  $content = curl_exec( $ch );
+  curl_close( $ch );
+
+  if (empty($content))  {
+    $result = FALSE;  // no data returned
+  }
+  else {
+    $result = $content;
+  }
+  return $result;
+}
+
+function dam_api_enabled_languages() {  
+  $url = "http://data.fluke.com/api/dam_service_resources/GetEnabledLanguages.json";
+
+  $options = array(
+    CURLOPT_RETURNTRANSFER => TRUE,
+    CURLOPT_HEADER => FALSE,
+    CURLOPT_USERAGENT => 'dam',
+    CURLOPT_AUTOREFERER => TRUE,
+    CURLOPT_CONNECTTIMEOUT => 10,
+    CURLOPT_TIMEOUT => 300,
+    CURLOPT_POST => TRUE,
+    CURLOPT_SSL_VERIFYHOST => FALSE,
+    CURLOPT_SSL_VERIFYPEER => FALSE
+  );
+  
+  $ch = curl_init( $url );
+  @curl_setopt_array($ch, $options);
+  $content = curl_exec( $ch );
+  curl_close( $ch );
+
+  if (empty($content))  {
+    $result = FALSE;  // no data returned
+  }
+  else {
+    $result = $content;
+  }
+  return $result;
+}
+ 
+ function dam_api_search_assets($type, $filters, $keywords, $search_lang) {  
+  $url = "http://data.fluke.com/" . $search_lang . "/api/dam_service_resources/SearchAssets.json";
+  $post_fields = array("content_type" => $type, "taxonomy" => $filters, "search_string" => $keywords);
+
+  $options = array(
+    CURLOPT_RETURNTRANSFER => TRUE,
+    CURLOPT_HEADER => FALSE,
+    CURLOPT_USERAGENT => 'dam',
+    CURLOPT_AUTOREFERER => TRUE,
+    CURLOPT_CONNECTTIMEOUT => 10,
+    CURLOPT_TIMEOUT => 300,
+    CURLOPT_POST => TRUE,
+    CURLOPT_POSTFIELDS => http_build_query($post_fields, '', '&'),
+    CURLOPT_SSL_VERIFYHOST => FALSE,
+    CURLOPT_SSL_VERIFYPEER => FALSE,
+    CURLOPT_HTTPHEADER => array("Content-Type: application/x-www-form-urlencoded", 'Accept: application/x-www-form-urlencoded'),
+  );
+  
+  $ch = curl_init( $url );
+  @curl_setopt_array($ch, $options);
+  $content = curl_exec( $ch );
+  curl_close( $ch );
+
+  if (empty($content))  {
+    $result = FALSE;  // no data returned
+  }
+  else {
+    $result = $content;
+  }
+  return $result;
+
+ }
+
+function dam_api_add_content($node){
+  $url = "http://data.fluke.com/api/dam_service_resources/CreateAsset";
+  $post_fields = $node;
+
+  $options = array(
+    CURLOPT_RETURNTRANSFER => TRUE,
+    CURLOPT_HEADER => FALSE,
+    CURLOPT_USERAGENT => 'dam',
+    CURLOPT_AUTOREFERER => TRUE,
+    CURLOPT_CONNECTTIMEOUT => 10,
+    CURLOPT_TIMEOUT => 300,
+    CURLOPT_POST => TRUE,
+    CURLOPT_POSTFIELDS => http_build_query($post_fields, '', '&'),
+    CURLOPT_SSL_VERIFYHOST => FALSE,
+    CURLOPT_SSL_VERIFYPEER => FALSE,
+    CURLOPT_HTTPHEADER => array("Content-Type: application/x-www-form-urlencoded", 'Accept: application/x-www-form-urlencoded'),
+  );
+  
+  $ch = curl_init( $url );
+  @curl_setopt_array($ch, $options);
+  $content = curl_exec( $ch );
+  curl_close( $ch );
+
+  if (empty($content))  {
+    $result = FALSE;  // no data returned
+  }
+  else {
+    $result = $content;
+  }
+  return $result;
+
+}

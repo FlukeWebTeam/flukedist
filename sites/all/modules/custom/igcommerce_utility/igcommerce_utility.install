@@ -1,0 +1,90 @@
+<?php
+
+/**
+ * @file
+ * Install, update, and uninstall functions for the igcommerce utility module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function igcommerce_utility_install() {
+  igcommerce_utility_create_fields();
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function igcommerce_utility_uninstall() {
+  $node_types = node_type_get_types(); 
+  foreach ($node_types as $node_type) {
+    if ($instance = field_info_instance('node', 'igcommerce_lang_conf', $node_type->type)) {
+      field_delete_instance($instance);
+    }
+  }
+}
+
+/**
+ * Create the field for multiple language node aliases.
+ */
+function igcommerce_utility_update_7008() {
+  igcommerce_utility_create_fields();
+}
+
+/**
+ * Checks if we need to create a field for handling the node languages per node.
+ */
+function igcommerce_utility_create_fields() {
+
+  $field_name = 'igcommerce_lang_conf';
+
+  // Make sure the field doesn't already exist.
+  if (!field_info_field($field_name)) {
+    // Create the field.
+    $field = array(
+      'field_name' => $field_name,
+      'type' => 'text',
+      );
+    field_create_field($field);
+
+    // Create the instance.
+    $instance = array( 'field_name' => $field_name,
+      'entity_type' => 'node',     
+      'label' => 'Select Languages',
+      'description' => 'Languages for which node is available for translation.',
+      'display' => array(
+        'default' => array('label' => 'hidden', 'type' => 'hidden'),
+        ),
+      );
+
+    // Create field for all the node types.
+    $node_types = node_type_get_types(); 
+    foreach ($node_types as $node_type) {
+      $instance['bundle'] = $node_type->type; 
+      field_create_instance($instance); 
+    }
+
+    watchdog('igcommerce_utility', t('!field_name was added successfully.', array('!field_name' => $field_name)));
+  }
+  else {
+    watchdog('igcommerce_utility', t('!field_name already exists.', array('!field_name' => $field_name)));
+  }
+}
+
+/**
+ * Implements hook_update_N 
+ * 
+ * This increases the length of field to encompass the configurtion storage.
+ */
+function igcommerce_utility_update_7010() {
+
+  $textarea_spec = array(
+    'type' => 'text',
+    'size' => 'big',
+    'not null' => FALSE,
+  );
+  db_change_field('field_data_igcommerce_lang_conf', 'igcommerce_lang_conf_value', 'igcommerce_lang_conf_value', $textarea_spec);
+  db_change_field('field_revision_igcommerce_lang_conf', 'igcommerce_lang_conf_value', 'igcommerce_lang_conf_value', $textarea_spec);
+
+  field_cache_clear(TRUE);
+}
